@@ -1,5 +1,6 @@
-App.factory 'Tasks', [
-  '$resource',
-  ($resource) ->
-    $resource '/tasks.json'
+window.App.factory 'Tasks',
+  [
+    '$resource',
+    ($resource) ->
+      $resource '/tasks/:id.json', {id: '@id'}
   ]

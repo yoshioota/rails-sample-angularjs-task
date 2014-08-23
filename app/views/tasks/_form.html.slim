@@ -1,15 +1,7 @@
-= bootstrap_form_for @task, :html => {'ng-submit' => 'addTask()', 'data-post-form' => @task.id || 0} do |f|
+div(ng-controller = 'TasksCtrl')
+  = bootstrap_form_for @task, url: nil, html: {action: nil, 'ng-submit' => 'addTask()', 'data-post-form' => @task.id || 0} do |f|
 
-  - if @task.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@task.errors.count, "error")} prohibited this task from being saved:"
-      ul
-        - @task.errors.full_messages.each do |message|
-          li = message
+    = f.text_field :title, { :'ng-model' => 'task.title', autofocus: true}
 
-  = f.text_field :title, { :'ng-model' => 'task.title'}
-  = f.text_area :description, { :'ng-model' => 'task.description'}
-  = f.check_box :done, { :'ng-model' => 'task.done'}
-
-  .actions
-    = f.submit class: 'btn btn-success'
+    .actions
+      = f.button 'ng-click' => 'Create();', class: 'btn btn-success'

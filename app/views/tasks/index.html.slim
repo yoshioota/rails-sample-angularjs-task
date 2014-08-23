@@ -1,33 +1,38 @@
-- @task = Task.new
-= render partial: 'form'
+h1 list
 
-hr
-.row
-  .col-xs-12
-    table.table.table-bordered(ng-controller="TasksCtrl")
-      tr ng-repeat="task in tasks"
-        td() {{task.title}}
+/- @task = Task.new
+/= render partial: 'form'
 
-table
-  thead
-    tr
-      th Title
-      th Description
-      th Done
-      th
-      th
-      th
+div(ng-controller = 'TasksCtrl')
 
-  tbody
-    - @tasks.each do |task|
-      tr
-        td = task.title
-        td = task.description
-        td = task.done
-        td = link_to 'Show', task
-        td = link_to 'Edit', edit_task_path(task)
-        td = link_to 'Destroy', task, data: {:confirm => 'Are you sure?'}, :method => :delete
+  form ng-submit = 'addTask()' class='form' name='taskForm'
 
-  p= link_to '+ New Task', new_task_path, class: 'btn btn-success'
+    input type = 'text' ng-model = 'taskForm.title' autofocus = true
+    |{{taskForm.titleError}}
+
+    .actions
+      button class = 'btn btn-success'
+        |保存
+
+  button ng-click = 'reload()' class = 'btn btn-info'
+    |hoge
+
+  |{{status}}
 
   hr
+
+  .row
+    .col-xs-12
+      table.table.table-bordered
+        tr
+          td #
+          td title
+          td description
+          td
+          td
+        tr ng-repeat="task in tasks"
+          td() {{task.id}}
+          td() {{task.title}}
+          td() {{task.description}}
+          td = link_to 'Edit', 'javascript:void(0)', 'ng-click' => "Edit(task.id)"
+          td = link_to 'Delete', 'javascript:void(0)', 'ng-click' => "Delete(task.id)"
