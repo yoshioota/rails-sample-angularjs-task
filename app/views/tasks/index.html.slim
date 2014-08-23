@@ -1,0 +1,33 @@
+- @task = Task.new
+= render partial: 'form'
+
+hr
+.row
+  .col-xs-12
+    table.table.table-bordered(ng-controller="TasksCtrl")
+      tr ng-repeat="task in tasks"
+        td() {{task.title}}
+
+table
+  thead
+    tr
+      th Title
+      th Description
+      th Done
+      th
+      th
+      th
+
+  tbody
+    - @tasks.each do |task|
+      tr
+        td = task.title
+        td = task.description
+        td = task.done
+        td = link_to 'Show', task
+        td = link_to 'Edit', edit_task_path(task)
+        td = link_to 'Destroy', task, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+  p= link_to '+ New Task', new_task_path, class: 'btn btn-success'
+
+  hr

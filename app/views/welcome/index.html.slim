@@ -1,0 +1,10 @@
+h1 test
+
+.content(ng-controller = "EventsCtrl")
+  .content_div
+    table.table
+      tr(ng-repeat = "event in events")
+        td
+          |{{event.title}}
+        td
+          |{{event.description}}
