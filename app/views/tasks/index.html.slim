@@ -6,23 +6,34 @@ h1 list
 div(ng-controller = 'TasksCtrl')
 
   form ng-submit = 'addTask()' class='form' name='taskForm'
+    input type = 'text'   ng-model = 'taskForm.title' autofocus = true
 
-    input type = 'text' ng-model = 'taskForm.title' autofocus = true
     |{{taskForm.titleError}}
 
-    .actions
-      button class = 'btn btn-success'
-        |保存
-
-  button ng-click = 'reload()' class = 'btn btn-info'
-    |hoge
-
-  |{{status}}
+    button class = 'btn btn-success'
+      |作成
 
   hr
 
   .row
     .col-xs-12
+
+      ul.pagination
+        li
+          a href="javascript:void(0)" ng-click="changePageNo(result.result.page_info.current_page - 1)" &laquo;
+
+        li
+          a href="javascript:void(0)" ng-click="changePageNo(result.result.page_info.current_page + 1)" &raquo;
+
+        li ng-repeat = 'pageNo in result.result.page_info.page_numbers' ng-class="{'active': pageNo == result.result.page_info.current_page}"
+          a href="javascript:void(0)" ng-click="changePageNo(pageNo)" ng-model="idx" {{pageNo}}
+
+        li
+          a href="javascript:void(0)" ng-click="changePageNo(result.result.page_info.current_page - 1)" &laquo;
+
+        li
+          a href="javascript:void(0)"  ng-click="changePageNo(result.result.page_info.current_page + 1)" &raquo;
+
       table.table.table-bordered
         tr
           td #
@@ -30,9 +41,25 @@ div(ng-controller = 'TasksCtrl')
           td description
           td
           td
-        tr ng-repeat="task in tasks"
-          td() {{task.id}}
-          td() {{task.title}}
-          td() {{task.description}}
-          td = link_to 'Edit', 'javascript:void(0)', 'ng-click' => "Edit(task.id)"
-          td = link_to 'Delete', 'javascript:void(0)', 'ng-click' => "Delete(task.id)"
+
+        tr ng-repeat="task in result.result.tasks"
+          td
+            |{{task.id}}
+
+          td
+            div ng-hide = 'task.isEditing' ng-dblclick = 'Edit(task)'
+              |{{task.title}}
+            div ng-show = 'task.isEditing'
+              input type = 'text' ng-model='task.title' ng-keyDown='editTaskKeyDown(task, $event)' style='width: 100%;'
+
+          td
+            |{{task.description}}
+
+          td
+            div ng-hide = 'task.isEditing'
+              = link_to 'Edit', 'javascript:void(0)', 'ng-click' => "Edit(task)"
+            div ng-show = 'task.isEditing'
+              = link_to 'Cancel', 'javascript:void(0)', 'ng-click' => "EditCancel(task)"
+
+          td
+            = link_to 'Delete', 'javascript:void(0)', 'ng-click' => "Delete(task.id)"

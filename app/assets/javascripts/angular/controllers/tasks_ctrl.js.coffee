@@ -2,7 +2,9 @@ window.App.controller 'TasksCtrl', [
   '$scope',
   'Tasks',
   ($scope, Tasks) ->
-    $scope.tasks = Tasks.query()
+
+    Tasks.get per_page: 50, (result) ->
+      $scope.result = result
 
     $scope.addTask = ->
       task = new Tasks()
@@ -14,45 +16,53 @@ window.App.controller 'TasksCtrl', [
           else
             console.log('save no error')
           console.log('save ok')
-          $scope.tasks.unshift(u)
-          $scope.taskForm.title = ""
+#          $scope.tasks.unshift(u)
+          $scope.taskForm.id = ''
+          $scope.taskForm.title = ''
           $scope.taskForm.titleError = ''
-          @
+          Tasks.get (result)->
+            $scope.result = result
+
         , (u, putResponseHeaders)->
           console.log('save failure')
           $scope.taskForm.titleError = 'error!'
-          @
-      @
 
     $scope.Create = ->
       @
 
     $scope.reload = ->
       console.log('reload')
-      $scope.tasks = Tasks.query()
-      @
+      Tasks.get {},
+        (result) ->
+          $scope.result = result
 
-    $scope.Edit = (id) ->
-      console.log('edit' + id)
-      @
+    $scope.Edit = (task) ->
+      console.log('edit' + task.id)
+      task.isEditing = ! task.isEditing
+
+    $scope.EditCancel = (task) ->
+      task.isEditing = false
 
     $scope.Delete = (id) ->
       Tasks.delete \
         {id: id},
         () ->
           console.log('deleted!')
-          $scope.tasks = Tasks.query()
-          @
-      @
+          Tasks.get (result) ->
+            $scope.result = result
 
-#      task. {id: id}, ()->
-#      console.log('deleted!')
+    $scope.editTaskKeyDown = (_task, $event) ->
+      if $event.which != 13
+        return
 
-#      task.delete({id: id},
-#        ->
-#          console.log('deleted!')
-#      )
-#      console.log('delete' + id)
-      true
+      tt = new Tasks(id: _task.id)
+      tt.title = _task.title
+      tt.$update \
+        (task, putResponseHeaders) =>
+          _task.isEditing = false
 
+    $scope.changePageNo = (pageNo) ->
+      Tasks.get {page: pageNo, per_page: 50},
+        (result) ->
+          $scope.result = result
 ]

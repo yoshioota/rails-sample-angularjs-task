@@ -61,3 +61,5 @@ group :development do
   gem 'binding_of_caller'
   gem 'rails-footnotes', '>= 4.0.0', '<5'
 end
+
+gem 'kaminari'
