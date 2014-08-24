@@ -39,6 +39,10 @@ window.App.controller 'TasksCtrl', [
     $scope.Edit = (task) ->
       console.log('edit' + task.id)
       task.isEditing = ! task.isEditing
+      task_id = task.id
+      setTimeout \
+        (-> $('#task-' + task_id + '-title')[0].select())
+        , -1
 
     $scope.EditCancel = (task) ->
       task.isEditing = false

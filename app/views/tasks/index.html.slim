@@ -50,7 +50,7 @@ div(ng-controller = 'TasksCtrl')
             div ng-hide = 'task.isEditing' ng-dblclick = 'Edit(task)'
               |{{task.title}}
             div ng-show = 'task.isEditing'
-              input type = 'text' ng-model='task.title' ng-keyDown='editTaskKeyDown(task, $event)' style='width: 100%;'
+              input type = 'text' ng-attr-id="{{'task-' + task.id + '-title'}}" ng-model='task.title' ng-keyDown='editTaskKeyDown(task, $event)' style='width: 100%;'
 
           td
             |{{task.description}}
