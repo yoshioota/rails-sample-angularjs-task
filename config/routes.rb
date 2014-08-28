@@ -4,5 +4,5 @@ Rails.application.routes.draw do
 
   get 'events/index'
 
-  root 'welcome#index'
+  root 'tasks#index'
 end

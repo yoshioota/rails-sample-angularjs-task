@@ -3,8 +3,15 @@ window.App.controller 'TasksCtrl', [
   'Tasks',
   ($scope, Tasks) ->
 
-    Tasks.get per_page: 50, (result) ->
+    perPage = 10
+
+    Tasks.get per_page: perPage, (result) ->
       $scope.result = result
+
+    $scope.initForm = ->
+      $scope.taskForm.id = ''
+      $scope.taskForm.title = ''
+      $scope.taskForm.titleError = ''
 
     $scope.addTask = ->
       task = new Tasks()
@@ -16,11 +23,10 @@ window.App.controller 'TasksCtrl', [
           else
             console.log('save no error')
           console.log('save ok')
-#          $scope.tasks.unshift(u)
-          $scope.taskForm.id = ''
-          $scope.taskForm.title = ''
-          $scope.taskForm.titleError = ''
-          Tasks.get (result)->
+
+          $scope.initForm()
+
+          Tasks.get per_page: perPage, (result)->
             $scope.result = result
 
         , (u, putResponseHeaders)->
@@ -66,7 +72,10 @@ window.App.controller 'TasksCtrl', [
           _task.isEditing = false
 
     $scope.changePageNo = (pageNo) ->
-      Tasks.get {page: pageNo, per_page: 50},
+      return if pageNo < 1
+      return if pageNo > $scope.result.page_info.num_pages
+
+      Tasks.get {page: pageNo, per_page: perPage},
         (result) ->
           $scope.result = result
 ]

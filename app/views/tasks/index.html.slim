@@ -20,19 +20,13 @@ div(ng-controller = 'TasksCtrl')
 
       ul.pagination
         li
-          a href="javascript:void(0)" ng-click="changePageNo(result.result.page_info.current_page - 1)" &laquo;
+          a href="javascript:void(0)" ng-click="changePageNo(result.page_info.current_page - 1)" &laquo;
 
         li
-          a href="javascript:void(0)" ng-click="changePageNo(result.result.page_info.current_page + 1)" &raquo;
+          a href="javascript:void(0)" ng-click="changePageNo(result.page_info.current_page + 1)" &raquo;
 
-        li ng-repeat = 'pageNo in result.result.page_info.page_numbers' ng-class="{'active': pageNo == result.result.page_info.current_page}"
+        li ng-repeat = 'pageNo in result.page_info.page_numbers' ng-class="{'active': pageNo == result.page_info.current_page}"
           a href="javascript:void(0)" ng-click="changePageNo(pageNo)" ng-model="idx" {{pageNo}}
-
-        li
-          a href="javascript:void(0)" ng-click="changePageNo(result.result.page_info.current_page - 1)" &laquo;
-
-        li
-          a href="javascript:void(0)"  ng-click="changePageNo(result.result.page_info.current_page + 1)" &raquo;
 
       table.table.table-bordered
         tr
@@ -42,7 +36,7 @@ div(ng-controller = 'TasksCtrl')
           td
           td
 
-        tr ng-repeat="task in result.result.tasks"
+        tr ng-repeat="task in result.tasks"
           td
             |{{task.id}}
 
