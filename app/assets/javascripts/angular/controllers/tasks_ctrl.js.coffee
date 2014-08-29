@@ -3,10 +3,8 @@ window.App.controller 'TasksCtrl', [
   'Tasks',
   ($scope, Tasks) ->
 
-    perPage = 10
-
-    Tasks.get per_page: perPage, (result) ->
-      $scope.result = result
+    currentPageNo = 1
+    perPage       = 10
 
     $scope.initForm = ->
       $scope.taskForm.id = ''
@@ -14,8 +12,7 @@ window.App.controller 'TasksCtrl', [
       $scope.taskForm.titleError = ''
 
     $scope.addTask = ->
-      task = new Tasks()
-      task.title = $scope.taskForm.title
+      task = new Tasks(title: $scope.taskForm.title)
       task.$save \
         (u, putResponseHeaders) ->
           if $scope.hasError
@@ -25,22 +22,11 @@ window.App.controller 'TasksCtrl', [
           console.log('save ok')
 
           $scope.initForm()
-
-          Tasks.get per_page: perPage, (result)->
-            $scope.result = result
+          $scope.search()
 
         , (u, putResponseHeaders)->
           console.log('save failure')
           $scope.taskForm.titleError = 'error!'
-
-    $scope.Create = ->
-      @
-
-    $scope.reload = ->
-      console.log('reload')
-      Tasks.get {},
-        (result) ->
-          $scope.result = result
 
     $scope.Edit = (task) ->
       console.log('edit' + task.id)
@@ -58,8 +44,7 @@ window.App.controller 'TasksCtrl', [
         {id: id},
         () ->
           console.log('deleted!')
-          Tasks.get (result) ->
-            $scope.result = result
+          $scope.search()
 
     $scope.editTaskKeyDown = (_task, $event) ->
       if $event.which != 13
@@ -74,8 +59,14 @@ window.App.controller 'TasksCtrl', [
     $scope.changePageNo = (pageNo) ->
       return if pageNo < 1
       return if pageNo > $scope.result.page_info.num_pages
+      currentPageNo = pageNo
+      $scope.search()
 
-      Tasks.get {page: pageNo, per_page: perPage},
+    $scope.search = () ->
+      Tasks.get {page: currentPageNo, per_page: perPage},
         (result) ->
           $scope.result = result
+
+    # init
+    $scope.search()
 ]
